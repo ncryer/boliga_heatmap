@@ -17,6 +17,9 @@ def soupify(url):
 def parse_row(row):
     # Fjern \t \r og del rækken op til CSV standard
     data = row.get_text().strip().replace("\t","").replace("\r","").split("\n")
+    # Fix tal så R vil lege med dem
+    data[2] = data[2].replace(".","")
+    data[7] = data[7].replace(".","")
     # Fjern tomme strenge fra listen og returner
     return [item for item in data if item is not ""]
     
@@ -55,7 +58,6 @@ def build_csv(starturl):
     while len(queue) > 0:
         page = queue.pop()
         content = get_content(soupify(page))
-        
         # Tilføj rækker til CSV, tilføj kun headeren en gang
         if has_header is False:
             CSV.append(content[0])
